@@ -1,0 +1,37 @@
+version: '3'
+services:
+  kafka-cluster:
+    container_name: kafka-cluster
+    image: landoop/fast-data-dev
+    environment:
+      ADV_HOST: 127.0.0.1         # Change to 192.168.99.100 if using Docker Toolbox
+      RUNTESTS: 0                 # Disable Running tests so the cluster starts faster
+    ports:
+      - "2181:2181"                 # Zookeeper
+      - "3030:3030"                 # Landoop UI
+      - "8081-8083:8081-8083"       # REST Proxy, Schema Registry, Kafka Connect ports
+      - "9581-9585:9581-9585"       # JMX Ports
+      - "9092:9092"                 # Kafka Broker
+    volumes:
+      # Specify an absolute path mapping
+      - /
+  analytics-database:
+    image: postgres:13.3
+    container_name: analytics-database
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: analytics
+    ports:
+      - "5432:5432"
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    extra_hosts: ['host.docker.internal:host-gateway']
+    restart: always
+    ports:
+      - "9411:9411"

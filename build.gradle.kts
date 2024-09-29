@@ -3,6 +3,8 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
+	id("org.jetbrains.kotlin.plugin.noarg") version "1.9.25"
+	id("com.adarshr.test-logger") version "3.2.0"
 }
 
 group = "inc.evil"
@@ -28,11 +30,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.micrometer:micrometer-tracing-bridge-brave")
+	implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 	implementation("io.projectreactor.kafka:reactor-kafka:1.3.23")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-	implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -70,4 +73,17 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+//during deploy use: gradle clean build -x test unit-tests
+val unitTests = task<Test>("unit-tests") {
+	useJUnitPlatform {
+		jvmArgs("-Dio.netty.leakDetectionLevel=paranoid")
+		excludeTags("integration-test")
+	}
+}
+
+noArg {
+	annotation("inc.evil.bootiful_reactive_kafka.common.annotations.NoArgsConstructor")
+	invokeInitializers = true
 }

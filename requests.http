@@ -1,0 +1,2 @@
+### debug
+GET localhost:8005/api/v1/debug/ping
