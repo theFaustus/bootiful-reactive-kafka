@@ -1,8 +1,6 @@
-package inc.evil.bootiful_reactive_kafka.web
+package inc.evil.bootiful_reactive_kafka.web.rest
 
 import inc.evil.bootiful_reactive_kafka.web.dto.PongResponse
-import io.micrometer.tracing.annotation.NewSpan
-import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +16,6 @@ class DebugController {
         private val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    @NewSpan
     @GetMapping("/ping")
     fun ping()= Mono.just(PongResponse("pong")).doOnSuccess { log.debug("Requested ping") }
 }

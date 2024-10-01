@@ -1,2 +1,17 @@
-### debug
+### debug rest
 GET localhost:8005/api/v1/debug/ping
+
+### debug graphql
+GRAPHQL localhost:8005/graphql
+
+query  {
+    ping {
+        message
+        serverInstance
+        threadName
+        timestamp
+    }
+}
+
+### find log-events by userId
+GET localhost:8005/api/v1/log-events?userId=codeMasterX

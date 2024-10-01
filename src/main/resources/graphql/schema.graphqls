@@ -1,0 +1,10 @@
+type Query {
+    ping: PongResponse
+}
+
+type PongResponse {
+    message: String
+    timestamp: String
+    threadName: String
+    serverInstance: String
+}

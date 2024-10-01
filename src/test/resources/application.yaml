@@ -29,7 +29,7 @@ management:
 
 spring:
   profiles:
-    active: local
+    active: test
   application:
     name: stock-notification-service
   data:
@@ -49,9 +49,12 @@ spring:
   netty:
     leak-detection: paranoid
 
+
 logging:
   level:
     inc.evil: DEBUG
     io.r2dbc.postgresql.QUERY: DEBUG # for queries
     io.r2dbc.postgresql.PARAM: DEBUG # for parameters
     org.zalando.logbook: trace
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
