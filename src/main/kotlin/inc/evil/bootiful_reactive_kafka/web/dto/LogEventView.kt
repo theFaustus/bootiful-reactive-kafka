@@ -1,5 +1,6 @@
 package inc.evil.bootiful_reactive_kafka.web.dto
 
+import inc.evil.bootiful_reactive_kafka.domain.DeviceType
 import inc.evil.bootiful_reactive_kafka.domain.LogEventAudit
 import inc.evil.bootiful_reactive_kafka.domain.LoginMethod
 import java.time.LocalDateTime
@@ -9,7 +10,7 @@ data class LogEventView(
     val userId: String,
     val createdAt: LocalDateTime?,
     val ipAddress: String,
-    val deviceType: String,
+    val deviceType: DeviceType,
     val browser: String?,
     val eventType: String,
     val loginMethod: LoginMethod?

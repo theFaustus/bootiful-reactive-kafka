@@ -8,16 +8,16 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TestcontainersIntegrationTest
-class LogEventAuditRepositoryTest : AbstractTestcontainersTest() {
+class SessionStateUpdateEventAuditRepositoryTest : AbstractTestcontainersTest() {
 
     @Autowired
-    private lateinit var repo: LogEventAuditRepository
+    private lateinit var repo: SessionStateUpdateEventAuditRepository
 
     @Test
-    @RunSql(["/db-data/log-events.sql"])
+    @RunSql(["/db-data/session-state-update-events.sql"])
     fun findByUserId() {
-        val logEventAudits = repo.findByUserId("codeMasterX").collectList().block()
-        assertThat(logEventAudits).isNotEmpty.hasSize(1)
+        val sessionStateUpdateEventAudits = repo.findByUserId("codeMasterX").collectList().block()
+        assertThat(sessionStateUpdateEventAudits).isNotEmpty.hasSize(2)
     }
 
 }

@@ -1,5 +1,6 @@
 package inc.evil.bootiful_reactive_kafka.common.fixtures
 
+import inc.evil.bootiful_reactive_kafka.domain.DeviceType
 import inc.evil.bootiful_reactive_kafka.domain.LoginMethod
 import inc.evil.bootiful_reactive_kafka.web.dto.LogEventView
 import java.time.LocalDateTime
@@ -11,7 +12,7 @@ class LogEventViewFixture {
             userId: String = "sponge_bob_squarepants",
             createdAt: LocalDateTime? = LocalDateTime.now(),
             ipAddress: String = "192.168.1.1",
-            deviceType: String = "krabby_patty",
+            deviceType: DeviceType = DeviceType.DESKTOP,
             browser: String? = "Nautilus Browser",
             eventType: String = "LOGIN",
             loginMethod: LoginMethod? = LoginMethod.SSO

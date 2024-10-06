@@ -6,8 +6,8 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("log_event_audit")
-data class LogEventAudit(
+@Table("session_state_update_event_audit")
+data class SessionStateUpdateEventAudit(
     @Id
     val id: Long? = null,
 
@@ -18,24 +18,6 @@ data class LogEventAudit(
     @Column("created_at")
     var createdAt: LocalDateTime? = null,
 
-    @Column("ip_address")
-    val ipAddress: String,
-
-    @Column("device_type")
-    val deviceType: DeviceType,
-
-    @Column
-    val browser: String?,
-
-    @Column("event_type")
-    val eventType: EventType,
-
-    @Column("login_method")
-    val loginMethod: LoginMethod?,
-
-    @Column("logout_reason")
-    val logoutReason: LogoutReason?,
-
-    @Column("session_id")
-    val sessionId: String?
+    @Column("session_state")
+    val sessionState: SessionState
 )
