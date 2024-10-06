@@ -48,6 +48,18 @@ spring:
     repair-on-migrate: true
   netty:
     leak-detection: paranoid
+  kafka:
+    topic: "session-state-update-events"
+    bootstrap-servers:
+      - localhost:9092
+    consumer:
+      group-id: analytics-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        auto.offset.reset: latest
+        max.poll.records: 200
+
 
 logging:
   level:
