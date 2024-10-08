@@ -9,9 +9,9 @@ class LogEventViewFixture {
     companion object {
         fun of(
             id: Long? = 1L,
-            userId: String = "sponge_bob_squarepants",
+            userId: String = "SpongeBobSquarePants",
             createdAt: LocalDateTime? = LocalDateTime.now(),
-            ipAddress: String = "192.168.1.1",
+            ipAddress: String = "1.1.1.1",
             deviceType: DeviceType = DeviceType.DESKTOP,
             browser: String? = "Nautilus Browser",
             eventType: String = "LOGIN",

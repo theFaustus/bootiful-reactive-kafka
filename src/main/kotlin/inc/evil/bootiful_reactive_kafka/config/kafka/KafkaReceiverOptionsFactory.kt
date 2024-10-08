@@ -21,7 +21,7 @@ class KafkaReceiverOptionsFactory(val config: KafkaConsumerConfigurationProperti
 
         val consumerProperties = KafkaConsumerConfigurationProperties.ConsumerProperties(specificProps.topic, defaultProps.properties + specificProps.properties)
 
-        log.debug("Computed consumer properties: {}", consumerProperties)
+        log.debug("Computed consumer properties for {} : {}", kafkaConsumerName, consumerProperties)
 
         val options = ReceiverOptions.create<K, V>(consumerProperties.properties)
             .subscription(listOf(consumerProperties.topic ?: throw IllegalArgumentException("Missing <topic> field for: $kafkaConsumerName")))

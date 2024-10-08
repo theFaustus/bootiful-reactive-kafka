@@ -14,5 +14,5 @@ class LogEventAuditController(private val logEventAuditService: LogEventAuditSer
 
     @GetMapping
     fun getUserEvents(@RequestParam(required = true) userId: String): Flux<LogEventView> =
-        logEventAuditService.findUserEvents(userId)
+        logEventAuditService.findByUserId(userId)
 }

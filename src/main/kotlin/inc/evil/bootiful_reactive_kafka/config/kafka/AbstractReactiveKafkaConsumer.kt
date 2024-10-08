@@ -35,7 +35,7 @@ abstract class AbstractReactiveKafkaConsumer<K : Any, V>(private val consumerNam
 
     protected open fun consume(record: ReceiverRecord<K, V>): Mono<Void> =
         Mono.just(record)
-            .doOnNext { r -> log.debug("Received {} {} with value={}", consumerName.eventType, r.key(), r.value()) }
+            .doOnNext { r -> log.debug("Received {} with key={} and value={}", consumerName.eventType, r.key(), r.value()) }
             .flatMap { handle(it) }
             .retryWhen(getRetrySpec(record))
             .doOnError { log.error("Encountered [{}] during process of ${consumerName.eventType} {}", it.message, record.key(), it) }

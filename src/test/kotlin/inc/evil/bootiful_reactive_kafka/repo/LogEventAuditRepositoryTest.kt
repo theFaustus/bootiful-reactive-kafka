@@ -16,8 +16,7 @@ class LogEventAuditRepositoryTest : AbstractTestcontainersTest() {
     @Test
     @RunSql(["/db-data/log-events.sql"])
     fun findByUserId() {
-        val logEventAudits = repo.findByUserId("codeMasterX").collectList().block()
-        assertThat(logEventAudits).isNotEmpty.hasSize(1)
+        assertThat(repo.findByUserId("codeMasterX").collectList().block()).isNotEmpty.hasSize(1)
     }
 
 }

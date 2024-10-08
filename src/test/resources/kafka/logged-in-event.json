@@ -1,0 +1,9 @@
+{
+  "userId": "backend_boss",
+  "timestamp": "2024-10-08T12:45:00.123Z",
+  "ipAddress": "1.1.1.1",
+  "deviceType": "DESKTOP",
+  "browser": "Firefox",
+  "loginMethod": "PASSWORD",
+  "sessionId": "sessionId456"
+}

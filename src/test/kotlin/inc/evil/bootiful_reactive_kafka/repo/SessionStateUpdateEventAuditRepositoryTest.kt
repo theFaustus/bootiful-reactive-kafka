@@ -16,8 +16,7 @@ class SessionStateUpdateEventAuditRepositoryTest : AbstractTestcontainersTest() 
     @Test
     @RunSql(["/db-data/session-state-update-events.sql"])
     fun findByUserId() {
-        val sessionStateUpdateEventAudits = repo.findByUserId("codeMasterX").collectList().block()
-        assertThat(sessionStateUpdateEventAudits).isNotEmpty.hasSize(2)
+        assertThat(repo.findByUserId("codeMasterX").collectList().block()).isNotEmpty.hasSize(2)
     }
 
 }

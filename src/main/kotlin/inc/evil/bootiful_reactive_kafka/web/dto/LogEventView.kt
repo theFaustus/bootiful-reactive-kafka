@@ -16,8 +16,8 @@ data class LogEventView(
     val loginMethod: LoginMethod?
 ) {
     companion object {
-        fun from(entity: LogEventAudit): LogEventView {
-            return LogEventView(
+        fun from(entity: LogEventAudit): LogEventView =
+            LogEventView(
                 id = entity.id,
                 userId = entity.userId,
                 createdAt = entity.createdAt,
@@ -27,6 +27,5 @@ data class LogEventView(
                 eventType = entity.eventType.name,
                 loginMethod = entity.loginMethod
             )
-        }
     }
 }

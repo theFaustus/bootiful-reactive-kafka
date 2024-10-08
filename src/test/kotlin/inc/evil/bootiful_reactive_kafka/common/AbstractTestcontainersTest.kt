@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.r2dbc.connection.init.ScriptUtils
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import reactor.core.publisher.Mono
@@ -37,6 +38,8 @@ abstract class AbstractTestcontainersTest {
                     .withReuse(true)
             }
 
+        private val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"))
+
         @JvmStatic
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
@@ -44,9 +47,12 @@ abstract class AbstractTestcontainersTest {
             registry.add("spring.r2dbc.username", postgres::getUsername)
             registry.add("spring.r2dbc.password", postgres::getPassword)
             registry.add("spring.flyway.url", postgres::getJdbcUrl)
+            registry.add("spring.kafka.bootstrap-servers") { kafka.bootstrapServers }
+            registry.add("spring.kafka.consumers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
+            registry.add("spring.kafka.consumers.DEFAULT.properties.auto.offset.reset") { "earliest" }
         }
 
-        fun r2dbcUrl(): String {
+        private fun r2dbcUrl(): String {
             return "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}"
         }
 
@@ -55,7 +61,8 @@ abstract class AbstractTestcontainersTest {
         internal fun setUp(): Unit {
             postgres.start()
             log.info("Testcontainers -> PostgresSQL DB started on [${r2dbcUrl()}] with user:root and password:123456")
+            kafka.start()
+            log.info("Testcontainers -> Kafka started with bootstrap.servers=${kafka.bootstrapServers}")
         }
     }
-
 }

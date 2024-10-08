@@ -65,8 +65,20 @@ spring:
         properties:
           client.id: analytics.session-state-update
           group.id: analytics.session-state-update.group
-
-
+      LOGGED-IN-EVENT:
+        topic: logged-in-events
+        properties:
+          client.id: analytics.logged-in-events
+          group.id: analytics.logged-in-events.group
+          value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedInEvent"
+      LOGGED-OUT-EVENT:
+        topic: logged-out-events
+        properties:
+          client.id: analytics.logged-out-events
+          group.id: analytics.logged-out-events.group
+          value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedOutEvent"
 logging:
   level:
     inc.evil: DEBUG

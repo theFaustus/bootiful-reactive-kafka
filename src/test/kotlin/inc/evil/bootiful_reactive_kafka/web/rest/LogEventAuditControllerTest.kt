@@ -24,7 +24,7 @@ class LogEventAuditControllerTest {
     fun getUserEvents_withValidUserId_returnsEvents() {
         val userId = "testUser"
         val logEventView = LogEventViewFixture.of()
-        whenever(logEventAuditService.findUserEvents(userId)).thenReturn(Flux.just(logEventView))
+        whenever(logEventAuditService.findByUserId(userId)).thenReturn(Flux.just(logEventView))
 
         webTestClient.get()
             .uri("/api/v1/log-events?userId=$userId")

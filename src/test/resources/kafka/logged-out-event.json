@@ -1,0 +1,9 @@
+{
+  "userId": "backend_boss",
+  "timestamp": "2024-10-08T17:00:00.456Z",
+  "ipAddress": "1.1.1.1",
+  "deviceType": "DESKTOP",
+  "sessionId": "sessionId456",
+  "logoutReason": "USER_INITIATED",
+  "browser": "Firefox"
+}

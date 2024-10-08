@@ -12,7 +12,7 @@ class SessionStateUpdateEventConsumer(val sessionStateUpdateEventAuditService: S
     AbstractReactiveKafkaConsumer<String, String>(SESSION_STATE_UPDATE) {
 
     override fun handle(record: ReceiverRecord<String, String>): Mono<Void> =
-        sessionStateUpdateEventAuditService.save(record.key(), record.value())
+        sessionStateUpdateEventAuditService.audit(record.key(), record.value())
 
 }
 
