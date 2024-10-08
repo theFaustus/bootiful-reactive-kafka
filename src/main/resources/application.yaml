@@ -49,16 +49,22 @@ spring:
   netty:
     leak-detection: paranoid
   kafka:
-    topic: "session-state-update-events"
-    bootstrap-servers:
-      - localhost:9092
-    consumer:
-      group-id: analytics-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      properties:
-        auto.offset.reset: latest
-        max.poll.records: 200
+    consumers:
+      DEFAULT:
+        properties:
+          bootstrap.servers: localhost:9092
+          schema.registry.url: localhost:8081
+          auto.offset.reset: latest
+          spring.json.use.type.headers: false
+          key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      SESSION-STATE-UPDATE:
+        topic: session-state-update-events
+        properties:
+          client.id: analytics.session-state-update
+          group.id: analytics.session-state-update.group
 
 
 logging:

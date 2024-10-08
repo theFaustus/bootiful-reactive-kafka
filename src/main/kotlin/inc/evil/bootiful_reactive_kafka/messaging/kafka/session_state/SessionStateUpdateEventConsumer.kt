@@ -1,29 +1,18 @@
 package inc.evil.bootiful_reactive_kafka.messaging.kafka.session_state
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
-import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate
+import inc.evil.bootiful_reactive_kafka.config.kafka.AbstractReactiveKafkaConsumer
+import inc.evil.bootiful_reactive_kafka.config.kafka.KafkaConsumerName.SESSION_STATE_UPDATE
+import inc.evil.bootiful_reactive_kafka.service.SessionStateUpdateEventAuditService
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import reactor.kafka.receiver.ReceiverRecord
 
 @Component
-class SessionStateUpdateEventConsumer(val consumerTemplate: ReactiveKafkaConsumerTemplate<String, String>) : CommandLineRunner {
+class SessionStateUpdateEventConsumer(val sessionStateUpdateEventAuditService: SessionStateUpdateEventAuditService) :
+    AbstractReactiveKafkaConsumer<String, String>(SESSION_STATE_UPDATE) {
 
-    companion object {
-        private val log: Logger = LoggerFactory.getLogger(this::class.java)
-    }
-
-    override fun run(vararg args: String?) {
-        consumerTemplate
-            .receive()
-            .concatMap { receiverRecord ->
-                Mono.just(receiverRecord)
-                    .doOnError { log.error("Encountered [{}] during process of SessionStateUpdate", it.message, it) }
-                    .doOnNext { r -> log.debug("Received {} with value={}", r.key(), r.value()) }
-                    .doFinally { receiverRecord.receiverOffset().acknowledge() }
-            }.subscribe()
-    }
+    override fun handle(record: ReceiverRecord<String, String>): Mono<Void> =
+        sessionStateUpdateEventAuditService.save(record.key(), record.value())
 
 }
 
