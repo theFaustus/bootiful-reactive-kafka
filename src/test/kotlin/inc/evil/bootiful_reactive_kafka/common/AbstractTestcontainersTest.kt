@@ -10,8 +10,11 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.r2dbc.connection.init.ScriptUtils
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.containers.Network
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 import reactor.core.publisher.Mono
 
@@ -38,7 +41,15 @@ abstract class AbstractTestcontainersTest {
                     .withReuse(true)
             }
 
-        private val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"))
+        private val network: Network = Network.newNetwork()
+        private val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1")).withNetwork(network)
+        private val schemaRegistry: GenericContainer<*> = GenericContainer(DockerImageName.parse("confluentinc/cp-schema-registry:7.5.2"))
+            .withNetwork(network)
+            .withExposedPorts(8081)
+            .withEnv("SCHEMA_REGISTRY_HOST_NAME", "schema-registry")
+            .withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
+            .withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "PLAINTEXT://${kafka.networkAliases[0]}:9092")
+            .waitingFor(Wait.forHttp("/subjects").forStatusCode(200))
 
         @JvmStatic
         @DynamicPropertySource
@@ -47,14 +58,18 @@ abstract class AbstractTestcontainersTest {
             registry.add("spring.r2dbc.username", postgres::getUsername)
             registry.add("spring.r2dbc.password", postgres::getPassword)
             registry.add("spring.flyway.url", postgres::getJdbcUrl)
-            registry.add("spring.kafka.bootstrap-servers") { kafka.bootstrapServers }
+            registry.add("spring.kafka.bootstrap-servers") { bootstrapServers() }
             registry.add("spring.kafka.consumers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
+            registry.add("spring.kafka.consumers.DEFAULT.properties.schema.registry.url") { schemRegistryUrl() }
             registry.add("spring.kafka.consumers.DEFAULT.properties.auto.offset.reset") { "earliest" }
         }
 
-        private fun r2dbcUrl(): String {
-            return "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}"
-        }
+        fun bootstrapServers() = kafka.bootstrapServers
+
+        private fun r2dbcUrl(): String = "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}"
+
+        fun schemRegistryUrl() = "http://${schemaRegistry.host}:${schemaRegistry.firstMappedPort}"
+
 
         @JvmStatic
         @BeforeAll
@@ -63,6 +78,8 @@ abstract class AbstractTestcontainersTest {
             log.info("Testcontainers -> PostgresSQL DB started on [${r2dbcUrl()}] with user:root and password:123456")
             kafka.start()
             log.info("Testcontainers -> Kafka started with bootstrap.servers=${kafka.bootstrapServers}")
+            schemaRegistry.start()
+            log.info("Testcontainers -> Kafka Schema Registry started with url=${schemRegistryUrl()}")
         }
     }
 }

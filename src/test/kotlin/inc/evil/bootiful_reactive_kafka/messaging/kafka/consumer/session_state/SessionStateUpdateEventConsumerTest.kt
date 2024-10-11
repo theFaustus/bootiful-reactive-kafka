@@ -1,4 +1,4 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.session_state
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.session_state
 
 import inc.evil.bootiful_reactive_kafka.service.SessionStateUpdateEventAuditService
 import org.apache.kafka.clients.consumer.ConsumerRecord

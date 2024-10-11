@@ -12,7 +12,7 @@ class LogEventAuditFixture {
             ipAddress: String = "1.1.1.1",
             deviceType: DeviceType = DeviceType.DESKTOP,
             browser: String? = "Nautilus Browser",
-            eventType: EventType = EventType.LOGIN,
+            eventType: LogEventType = LogEventType.LOGIN,
             loginMethod: LoginMethod? = LoginMethod.PASSWORD,
             logoutReason: LogoutReason? = null,
             sessionId: String? = "session_42"

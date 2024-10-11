@@ -1,0 +1,35 @@
+{
+  "type": "record",
+  "name": "SessionHackAttemptEvent",
+  "namespace": "inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.session_state.model",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "sessionId",
+      "type": "string"
+    },
+    {
+      "name": "ipAddress",
+      "type": "string"
+    },
+    {
+      "name": "attackMethod",
+      "type": {
+        "type": "enum",
+        "name": "AttackMethod",
+        "symbols": [
+          "SESSION_HIJACKING",
+          "BRUTE_FORCE",
+          "SESSION_FIXATION",
+          "TOKEN_THEFT",
+          "MAN_IN_THE_MIDDLE",
+          "CROSS_SITE_SCRIPTING",
+          "OTHER"
+        ]
+      }
+    }
+  ]
+}

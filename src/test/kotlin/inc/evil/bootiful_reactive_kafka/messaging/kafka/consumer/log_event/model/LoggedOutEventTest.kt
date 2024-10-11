@@ -1,8 +1,8 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model
 
 import inc.evil.bootiful_reactive_kafka.common.fixtures.LoggedOutEventFixture
 import inc.evil.bootiful_reactive_kafka.domain.DeviceType
-import inc.evil.bootiful_reactive_kafka.domain.EventType
+import inc.evil.bootiful_reactive_kafka.domain.LogEventType
 import inc.evil.bootiful_reactive_kafka.domain.LogoutReason
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ class LoggedOutEventTest {
         assertThat(result.ipAddress).isEqualTo(loggedOutEvent.ipAddress)
         assertThat(result.deviceType).isEqualTo(DeviceType.DESKTOP)
         assertThat(result.browser).isEqualTo(loggedOutEvent.browser)
-        assertThat(result.eventType).isEqualTo(EventType.LOGOUT)
+        assertThat(result.eventType).isEqualTo(LogEventType.LOGOUT)
         assertThat(result.loginMethod).isNull()
         assertThat(result.logoutReason).isEqualTo(runCatching { LogoutReason.valueOf(loggedOutEvent.logoutReason) }.getOrElse { LogoutReason.UNKNOWN })
         assertThat(result.sessionId).isEqualTo(loggedOutEvent.sessionId)

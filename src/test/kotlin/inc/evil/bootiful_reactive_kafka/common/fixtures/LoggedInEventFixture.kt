@@ -1,6 +1,6 @@
 package inc.evil.bootiful_reactive_kafka.common.fixtures
 
-import inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedInEvent
+import inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedInEvent
 import java.time.Instant
 
 class LoggedInEventFixture {

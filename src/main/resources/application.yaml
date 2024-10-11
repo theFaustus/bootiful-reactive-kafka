@@ -28,6 +28,9 @@ management:
       enabled: true
 
 spring:
+  devtools:
+    restart:
+      enabled: false
   profiles:
     active: local
   application:
@@ -53,7 +56,7 @@ spring:
       DEFAULT:
         properties:
           bootstrap.servers: localhost:9092
-          schema.registry.url: localhost:8081
+          schema.registry.url: http://localhost:8081
           auto.offset.reset: latest
           spring.json.use.type.headers: false
           key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -71,14 +74,21 @@ spring:
           client.id: analytics.logged-in-events
           group.id: analytics.logged-in-events.group
           value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedInEvent"
+          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedInEvent"
       LOGGED-OUT-EVENT:
         topic: logged-out-events
         properties:
           client.id: analytics.logged-out-events
           group.id: analytics.logged-out-events.group
           value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedOutEvent"
+          spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedOutEvent"
+      SESSION_HACK_ATTEMPT:
+        topic: session-hack-attempt-events
+        properties:
+          client.id: analytics.session-hack-attempt
+          group.id: analytics.session-hack-attempt.group
+          value.deserializer: io.confluent.kafka.streams.serdes.avro.SpecificAvroDeserializer
+
 logging:
   level:
     inc.evil: DEBUG

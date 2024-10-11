@@ -1,8 +1,8 @@
 package inc.evil.bootiful_reactive_kafka.service
 
 import inc.evil.bootiful_reactive_kafka.config.tracing.observe
-import inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedInEvent
-import inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedOutEvent
+import inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedInEvent
+import inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedOutEvent
 import inc.evil.bootiful_reactive_kafka.repo.LogEventAuditRepository
 import inc.evil.bootiful_reactive_kafka.web.dto.LogEventView
 import io.micrometer.observation.ObservationRegistry

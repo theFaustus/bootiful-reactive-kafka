@@ -1,8 +1,8 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model
 
 import inc.evil.bootiful_reactive_kafka.common.fixtures.LoggedInEventFixture
 import inc.evil.bootiful_reactive_kafka.domain.DeviceType
-import inc.evil.bootiful_reactive_kafka.domain.EventType
+import inc.evil.bootiful_reactive_kafka.domain.LogEventType
 import inc.evil.bootiful_reactive_kafka.domain.LoginMethod
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ class LoggedInEventTest {
         assertThat(result.ipAddress).isEqualTo(loggedInEvent.ipAddress)
         assertThat(result.deviceType).isEqualTo(DeviceType.DESKTOP)
         assertThat(result.browser).isEqualTo(loggedInEvent.browser)
-        assertThat(result.eventType).isEqualTo(EventType.LOGIN)
+        assertThat(result.eventType).isEqualTo(LogEventType.LOGIN)
         assertThat(result.loginMethod).isEqualTo(LoginMethod.PASSWORD)
         assertThat(result.logoutReason).isNull()
         assertThat(result.sessionId).isEqualTo(loggedInEvent.sessionId)

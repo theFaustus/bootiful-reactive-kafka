@@ -1,7 +1,7 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.session_state
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.session_state
 
-import inc.evil.bootiful_reactive_kafka.config.kafka.AbstractReactiveKafkaConsumer
-import inc.evil.bootiful_reactive_kafka.config.kafka.KafkaConsumerName.SESSION_STATE_UPDATE
+import inc.evil.bootiful_reactive_kafka.config.kafka.consumer.AbstractReactiveKafkaConsumer
+import inc.evil.bootiful_reactive_kafka.config.kafka.consumer.KafkaConsumerName.SESSION_STATE_UPDATE
 import inc.evil.bootiful_reactive_kafka.service.SessionStateUpdateEventAuditService
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono

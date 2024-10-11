@@ -28,7 +28,7 @@ data class LogEventAudit(
     val browser: String?,
 
     @Column("event_type")
-    val eventType: EventType,
+    val eventType: LogEventType,
 
     @Column("login_method")
     val loginMethod: LoginMethod?,

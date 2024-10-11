@@ -1,8 +1,8 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event
 
-import inc.evil.bootiful_reactive_kafka.config.kafka.AbstractReactiveKafkaConsumer
-import inc.evil.bootiful_reactive_kafka.config.kafka.KafkaConsumerName.LOGGED_OUT_EVENT
-import inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model.LoggedOutEvent
+import inc.evil.bootiful_reactive_kafka.config.kafka.consumer.AbstractReactiveKafkaConsumer
+import inc.evil.bootiful_reactive_kafka.config.kafka.consumer.KafkaConsumerName.LOGGED_OUT_EVENT
+import inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedOutEvent
 import inc.evil.bootiful_reactive_kafka.service.LogEventAuditService
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono

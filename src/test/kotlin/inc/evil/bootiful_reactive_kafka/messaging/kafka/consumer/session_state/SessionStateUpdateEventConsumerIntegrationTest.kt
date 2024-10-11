@@ -1,4 +1,4 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.session_state
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.session_state
 
 import inc.evil.bootiful_reactive_kafka.common.AbstractTestcontainersTest
 import inc.evil.bootiful_reactive_kafka.common.ComponentTest
@@ -56,7 +56,7 @@ class SessionStateUpdateEventConsumerIntegrationTest : AbstractTestcontainersTes
 
     @Test
     @RunSql(["/db-data/session-state-update-events.sql"])
-    fun consume_withInvalidSessionStateUpdate_retriesAndSavesSessionStateInDatabase(logs: CapturedOutput) {
+    fun consume_withErrorProcessing_retriesAndSavesSessionStateInDatabase(logs: CapturedOutput) {
         val userId = "user_987"
         val sessionState = "ACTIVE"
         assertThat(sessionStateUpdateEventAuditService.findByUserId(userId).collectList().block()).hasSize(1)

@@ -3,6 +3,7 @@ package inc.evil.bootiful_reactive_kafka.service
 import inc.evil.bootiful_reactive_kafka.config.tracing.observe
 import inc.evil.bootiful_reactive_kafka.domain.SessionState
 import inc.evil.bootiful_reactive_kafka.domain.SessionStateUpdateEventAudit
+import inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.session_state.model.SessionHackAttemptEvent
 import inc.evil.bootiful_reactive_kafka.repo.SessionStateUpdateEventAuditRepository
 import inc.evil.bootiful_reactive_kafka.web.dto.SessionStateUpdateView
 import io.micrometer.observation.ObservationRegistry
@@ -27,5 +28,9 @@ class SessionStateUpdateEventAuditService(private val repository: SessionStateUp
 
     fun audit(userId: String, state: String): Mono<Void> =
         repository.save(SessionStateUpdateEventAudit(userId = userId, sessionState = SessionState.valueOf(state)))
+            .doOnNext { log.debug("Audited {}", it) }.then()
+
+    fun audit(userId: String, hackAttemptEvent: SessionHackAttemptEvent): Mono<Void> =
+        repository.save(SessionStateUpdateEventAudit(userId = userId, sessionState = SessionState.HACK_ATTEMPT))
             .doOnNext { log.debug("Audited {}", it) }.then()
 }

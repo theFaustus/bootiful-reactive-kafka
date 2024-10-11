@@ -1,4 +1,4 @@
-package inc.evil.bootiful_reactive_kafka.config.kafka
+package inc.evil.bootiful_reactive_kafka.config.kafka.consumer
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.Logger

@@ -1,12 +1,13 @@
-package inc.evil.bootiful_reactive_kafka.config.kafka
+package inc.evil.bootiful_reactive_kafka.config.kafka.consumer
 
+import inc.evil.bootiful_reactive_kafka.config.kafka.KafkaConfigurationProperties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import reactor.kafka.receiver.ReceiverOptions
 
 @Component
-class KafkaReceiverOptionsFactory(val config: KafkaConsumerConfigurationProperties) {
+class KafkaReceiverOptionsFactory(val config: KafkaConfigurationProperties) {
 
     companion object {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -19,7 +20,7 @@ class KafkaReceiverOptionsFactory(val config: KafkaConsumerConfigurationProperti
         val specificProps = config.consumers[kafkaConsumerName]
             ?: throw IllegalArgumentException("Consumer configuration not found for: $kafkaConsumerName")
 
-        val consumerProperties = KafkaConsumerConfigurationProperties.ConsumerProperties(specificProps.topic, defaultProps.properties + specificProps.properties)
+        val consumerProperties = KafkaConfigurationProperties.ConsumerProperties(specificProps.topic, defaultProps.properties + specificProps.properties)
 
         log.debug("Computed consumer properties for {} : {}", kafkaConsumerName, consumerProperties)
 

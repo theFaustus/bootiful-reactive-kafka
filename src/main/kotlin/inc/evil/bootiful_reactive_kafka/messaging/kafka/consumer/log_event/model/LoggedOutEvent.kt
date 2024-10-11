@@ -1,8 +1,8 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event.model
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model
 
 import inc.evil.bootiful_reactive_kafka.domain.DeviceType
-import inc.evil.bootiful_reactive_kafka.domain.EventType
 import inc.evil.bootiful_reactive_kafka.domain.LogEventAudit
+import inc.evil.bootiful_reactive_kafka.domain.LogEventType
 import inc.evil.bootiful_reactive_kafka.domain.LogoutReason
 import java.time.Instant
 
@@ -20,7 +20,7 @@ data class LoggedOutEvent(
         ipAddress = ipAddress,
         deviceType = runCatching { DeviceType.valueOf(deviceType) }.getOrElse { DeviceType.UNKNOWN },
         browser = browser,
-        eventType = EventType.LOGOUT,
+        eventType = LogEventType.LOGOUT,
         loginMethod = null,
         logoutReason = runCatching { LogoutReason.valueOf(logoutReason) }.getOrElse { LogoutReason.UNKNOWN },
         sessionId = sessionId

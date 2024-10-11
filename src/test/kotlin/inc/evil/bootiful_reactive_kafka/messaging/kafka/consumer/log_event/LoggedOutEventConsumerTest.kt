@@ -1,4 +1,4 @@
-package inc.evil.bootiful_reactive_kafka.messaging.kafka.log_event
+package inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event
 
 import inc.evil.bootiful_reactive_kafka.common.fixtures.LoggedOutEventFixture
 import inc.evil.bootiful_reactive_kafka.service.LogEventAuditService
