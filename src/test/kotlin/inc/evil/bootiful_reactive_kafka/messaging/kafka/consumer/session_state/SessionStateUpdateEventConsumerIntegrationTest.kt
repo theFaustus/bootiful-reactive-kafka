@@ -31,7 +31,7 @@ class SessionStateUpdateEventConsumerIntegrationTest : AbstractTestcontainersTes
     private lateinit var sessionStateUpdateEventAuditService: SessionStateUpdateEventAuditService
 
     @Autowired
-    lateinit var kafkaTemplate: KafkaTemplate<String, Any>
+    private lateinit var kafkaTemplate: KafkaTemplate<String, Any>
 
     @Value("\${spring.kafka.consumers.SESSION-STATE-UPDATE.topic}")
     lateinit var topicName: String

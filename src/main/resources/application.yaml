@@ -34,7 +34,7 @@ spring:
   profiles:
     active: local
   application:
-    name: stock-notification-service
+    name: analytics-service
   data:
     r2dbc:
       repositories:
@@ -52,6 +52,25 @@ spring:
   netty:
     leak-detection: paranoid
   kafka:
+    producers:
+      DEFAULT:
+        properties:
+          bootstrap.servers: localhost:9092
+          schema.registry.url: http://localhost:8081
+          key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          value.serializer: org.apache.kafka.common.serialization.StringSerializer
+      INIT_RESOURCES:
+        topic: init-sandbox-resources
+        properties:
+          client.id: analytics.init-sandbox-resources
+          retries: 3
+          compression.type: snappy
+      DESTROY_RESOURCES:
+        topic: destroy-sandbox-resources
+        properties:
+          client.id: analytics.destroy-sandbox-resources
+          compression.type: snappy
+          value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumers:
       DEFAULT:
         properties:

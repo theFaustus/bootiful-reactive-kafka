@@ -34,7 +34,7 @@ class SessionHackAttemptEventConsumerIntegrationTest : AbstractTestcontainersTes
     private lateinit var sessionStateUpdateEventAuditService: SessionStateUpdateEventAuditService
 
     @Value("\${spring.kafka.consumers.SESSION_HACK_ATTEMPT.topic}")
-    lateinit var topicName: String
+    private lateinit var topicName: String
 
     @Test
     @RunSql(["/db-data/session-state-update-events.sql"])

@@ -62,14 +62,15 @@ abstract class AbstractTestcontainersTest {
             registry.add("spring.kafka.consumers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
             registry.add("spring.kafka.consumers.DEFAULT.properties.schema.registry.url") { schemRegistryUrl() }
             registry.add("spring.kafka.consumers.DEFAULT.properties.auto.offset.reset") { "earliest" }
+            registry.add("spring.kafka.producers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
+            registry.add("spring.kafka.producers.DEFAULT.properties.schema.registry.url") { schemRegistryUrl() }
         }
+
+        fun schemRegistryUrl() = "http://${schemaRegistry.host}:${schemaRegistry.firstMappedPort}"
 
         fun bootstrapServers() = kafka.bootstrapServers
 
         private fun r2dbcUrl(): String = "r2dbc:postgresql://${postgres.host}:${postgres.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgres.databaseName}"
-
-        fun schemRegistryUrl() = "http://${schemaRegistry.host}:${schemaRegistry.firstMappedPort}"
-
 
         @JvmStatic
         @BeforeAll
