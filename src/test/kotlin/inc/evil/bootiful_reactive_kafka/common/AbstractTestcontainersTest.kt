@@ -42,7 +42,10 @@ abstract class AbstractTestcontainersTest {
             }
 
         private val network: Network = Network.newNetwork()
-        private val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1")).withNetwork(network)
+        private val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"))
+            .withNetwork(network)
+            .withReuse(true)
+
         private val schemaRegistry: GenericContainer<*> = GenericContainer(DockerImageName.parse("confluentinc/cp-schema-registry:7.5.2"))
             .withNetwork(network)
             .withExposedPorts(8081)
@@ -50,6 +53,7 @@ abstract class AbstractTestcontainersTest {
             .withEnv("SCHEMA_REGISTRY_LISTENERS", "http://0.0.0.0:8081")
             .withEnv("SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS", "PLAINTEXT://${kafka.networkAliases[0]}:9092")
             .waitingFor(Wait.forHttp("/subjects").forStatusCode(200))
+            .withReuse(true)
 
         @JvmStatic
         @DynamicPropertySource
@@ -60,13 +64,13 @@ abstract class AbstractTestcontainersTest {
             registry.add("spring.flyway.url", postgres::getJdbcUrl)
             registry.add("spring.kafka.bootstrap-servers") { bootstrapServers() }
             registry.add("spring.kafka.consumers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
-            registry.add("spring.kafka.consumers.DEFAULT.properties.schema.registry.url") { schemRegistryUrl() }
+            registry.add("spring.kafka.consumers.DEFAULT.properties.schema.registry.url") { schemaRegistryUrl() }
             registry.add("spring.kafka.consumers.DEFAULT.properties.auto.offset.reset") { "earliest" }
             registry.add("spring.kafka.producers.DEFAULT.properties.bootstrap.servers") { kafka.bootstrapServers }
-            registry.add("spring.kafka.producers.DEFAULT.properties.schema.registry.url") { schemRegistryUrl() }
+            registry.add("spring.kafka.producers.DEFAULT.properties.schema.registry.url") { schemaRegistryUrl() }
         }
 
-        fun schemRegistryUrl() = "http://${schemaRegistry.host}:${schemaRegistry.firstMappedPort}"
+        fun schemaRegistryUrl() = "http://${schemaRegistry.host}:${schemaRegistry.firstMappedPort}"
 
         fun bootstrapServers() = kafka.bootstrapServers
 
@@ -74,13 +78,13 @@ abstract class AbstractTestcontainersTest {
 
         @JvmStatic
         @BeforeAll
-        internal fun setUp(): Unit {
+        internal fun setUp() {
             postgres.start()
             log.info("Testcontainers -> PostgresSQL DB started on [${r2dbcUrl()}] with user:root and password:123456")
             kafka.start()
             log.info("Testcontainers -> Kafka started with bootstrap.servers=${kafka.bootstrapServers}")
             schemaRegistry.start()
-            log.info("Testcontainers -> Kafka Schema Registry started with url=${schemRegistryUrl()}")
+            log.info("Testcontainers -> Kafka Schema Registry started with url=${schemaRegistryUrl()}")
         }
     }
 }

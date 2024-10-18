@@ -101,7 +101,7 @@ spring:
           group.id: analytics.logged-out-events.group
           value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
           spring.json.value.default.type: "inc.evil.bootiful_reactive_kafka.messaging.kafka.consumer.log_event.model.LoggedOutEvent"
-      SESSION_HACK_ATTEMPT:
+      SESSION-HACK-ATTEMPT:
         topic: session-hack-attempt-events
         properties:
           client.id: analytics.session-hack-attempt

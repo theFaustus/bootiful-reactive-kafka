@@ -47,7 +47,6 @@ class DestroyResourcesMessageProducerTest : AbstractTestcontainersTest() {
                 val records = consumer.poll(Duration.ofMillis(100))
                 assertThat(records).isNotEmpty.hasSize(1)
                 assertThat(records.first().key()).isEqualTo(key)
-                println(records.first().value())
                 assertThat(records.first().value()).isEqualTo(jsonPayload)
             }
         consumer.unsubscribe()

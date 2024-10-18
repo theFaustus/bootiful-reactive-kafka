@@ -18,11 +18,13 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.*
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.LogManager
 
@@ -33,8 +35,15 @@ class SessionHackAttemptEventConsumerIntegrationTest : AbstractTestcontainersTes
     @SpyBean
     private lateinit var sessionStateUpdateEventAuditService: SessionStateUpdateEventAuditService
 
-    @Value("\${spring.kafka.consumers.SESSION_HACK_ATTEMPT.topic}")
-    private lateinit var topicName: String
+    companion object {
+        private val topicName = "test-topic-${UUID.randomUUID()}"
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.kafka.consumers.SESSION-HACK-ATTEMPT.topic") { topicName }
+        }
+    }
 
     @Test
     @RunSql(["/db-data/session-state-update-events.sql"])
@@ -82,7 +91,7 @@ class SessionHackAttemptEventConsumerIntegrationTest : AbstractTestcontainersTes
     private fun getKafkaProducer(): KafkaProducer<String, SessionHackAttemptEvent> {
         val properties = mapOf(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers())
         val valueSerializer = SpecificAvroSerializer<SessionHackAttemptEvent>()
-        valueSerializer.configure(mapOf(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to schemRegistryUrl()), false)
+        valueSerializer.configure(mapOf(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG to schemaRegistryUrl()), false)
         return KafkaProducer(properties, StringSerializer(), valueSerializer)
     }
 

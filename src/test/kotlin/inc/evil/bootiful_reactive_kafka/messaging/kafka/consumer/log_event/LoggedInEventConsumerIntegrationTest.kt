@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.LogManager
 
@@ -36,8 +38,15 @@ class LoggedInEventConsumerIntegrationTest : AbstractTestcontainersTest() {
     @Autowired
     private lateinit var kafkaTemplate: KafkaTemplate<String, Any>
 
-    @Value("\${spring.kafka.consumers.LOGGED-IN-EVENT.topic}")
-    private lateinit var topicName: String
+    companion object {
+        private val topicName = "test-topic-${UUID.randomUUID()}"
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.kafka.consumers.LOGGED-IN-EVENT.topic") { topicName }
+        }
+    }
 
     @Test
     @RunSql(["/db-data/log-events.sql"])

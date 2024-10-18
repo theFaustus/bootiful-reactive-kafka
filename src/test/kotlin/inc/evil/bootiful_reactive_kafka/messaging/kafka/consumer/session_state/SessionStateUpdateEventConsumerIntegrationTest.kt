@@ -14,12 +14,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.LogManager
 
@@ -33,8 +35,15 @@ class SessionStateUpdateEventConsumerIntegrationTest : AbstractTestcontainersTes
     @Autowired
     private lateinit var kafkaTemplate: KafkaTemplate<String, Any>
 
-    @Value("\${spring.kafka.consumers.SESSION-STATE-UPDATE.topic}")
-    lateinit var topicName: String
+    companion object {
+        private val topicName = "test-topic-${UUID.randomUUID()}"
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.kafka.consumers.SESSION-STATE-UPDATE.topic") { topicName }
+        }
+    }
 
     @Test
     @RunSql(["/db-data/session-state-update-events.sql"])
@@ -42,6 +51,7 @@ class SessionStateUpdateEventConsumerIntegrationTest : AbstractTestcontainersTes
         val userId = "user_987"
         val sessionState = "ACTIVE"
         assertThat(sessionStateUpdateEventAuditService.findByUserId(userId).collectList().block()).hasSize(1)
+        println(topicName)
 
         kafkaTemplate.send(topicName, userId, sessionState).get()
 
