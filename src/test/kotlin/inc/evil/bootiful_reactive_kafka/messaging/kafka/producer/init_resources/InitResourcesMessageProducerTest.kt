@@ -9,23 +9,29 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.system.OutputCaptureExtension
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 @ComponentTest
-@ExtendWith(OutputCaptureExtension::class)
 class InitResourcesMessageProducerTest : AbstractTestcontainersTest() {
-
-    @Value("\${spring.kafka.producers.INIT_RESOURCES.topic}")
-    private lateinit var topicName: String
 
     @Autowired
     private lateinit var initResourcesMessageProducer: InitResourcesMessageProducer
+
+    companion object {
+        private val topicName = "test-topic-${UUID.randomUUID()}"
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.kafka.producers.INIT_RESOURCES.topic") { topicName }
+        }
+    }
 
     @Test
     fun send_correctlyPublishesMessage() {
