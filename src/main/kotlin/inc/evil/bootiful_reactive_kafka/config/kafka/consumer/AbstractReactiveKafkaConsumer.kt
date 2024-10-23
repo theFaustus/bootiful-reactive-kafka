@@ -1,5 +1,6 @@
 package inc.evil.bootiful_reactive_kafka.config.kafka.consumer
 
+import inc.evil.bootiful_reactive_kafka.config.kafka.producer.ReactiveKafkaDeadLetterTopicProducer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,6 +23,9 @@ abstract class AbstractReactiveKafkaConsumer<K : Any, V>(private val consumerNam
     @Autowired
     private lateinit var kafkaReceiverOptionsFactory: KafkaReceiverOptionsFactory
 
+    @Autowired
+    private lateinit var reactiveKafkaDeadLetterTopicProducer: ReactiveKafkaDeadLetterTopicProducer
+
     private val kafkaConsumerTemplate: ReactiveKafkaConsumerTemplate<K, V> by lazy {
         ReactiveKafkaConsumerTemplate(kafkaReceiverOptionsFactory.createReceiverOptions<K, V>(consumerName))
     }
@@ -38,10 +42,16 @@ abstract class AbstractReactiveKafkaConsumer<K : Any, V>(private val consumerNam
             .doOnNext { r -> log.debug("Received {} with key={} and value={}", consumerName.eventType, r.key(), r.value()) }
             .flatMap { handle(it) }
             .retryWhen(getRetrySpec(record))
-            .doOnError { log.error("Encountered [{}] during process of ${consumerName.eventType} {}", it.message, record.key(), it) }
+            .onErrorResume { handleProcessingError(record, it) }
             .doFinally { record.receiverOffset().acknowledge() }
             .onErrorComplete()
             .then()
+
+    protected open fun handleProcessingError(record: ReceiverRecord<K, V>, ex: Throwable): Mono<Void> =
+        (Mono.error<Void>(ex)
+            .takeUnless { kafkaReceiverOptionsFactory.isDeadLetterTopicEnabled(consumerName) }
+            ?: reactiveKafkaDeadLetterTopicProducer.process(record).then(Mono.error(ex)))
+            .doFirst { log.error("Encountered [{}] during process of ${consumerName.eventType} {}", ex.message, record.key(), ex) }
 
     protected open fun getRetrySpec(record: ConsumerRecord<K, V>): Retry =
         Retry.fixedDelay(DEFAULT_RETRY_MAX_ATTEMPTS, Duration.ofSeconds(1))

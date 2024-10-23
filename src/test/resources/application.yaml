@@ -81,6 +81,7 @@ spring:
           spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
       SESSION-STATE-UPDATE:
         topic: test-session-state-update-events
+        dlt-enabled: true
         properties:
           client.id: analytics.session-state-update
           group.id: analytics.session-state-update.group

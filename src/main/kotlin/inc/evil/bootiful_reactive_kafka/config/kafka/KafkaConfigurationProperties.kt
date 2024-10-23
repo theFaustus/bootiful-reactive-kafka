@@ -16,6 +16,7 @@ data class KafkaConfigurationProperties(
 
     data class ConsumerProperties(
         var topic: String? = null,
+        var dltEnabled: Boolean = false,
         var properties: Map<String, String> = HashMap()
     )
 

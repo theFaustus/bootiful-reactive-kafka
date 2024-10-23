@@ -20,7 +20,8 @@ class KafkaReceiverOptionsFactory(val config: KafkaConfigurationProperties) {
         val specificProps = config.consumers[kafkaConsumerName]
             ?: throw IllegalArgumentException("Consumer configuration not found for: $kafkaConsumerName")
 
-        val consumerProperties = KafkaConfigurationProperties.ConsumerProperties(specificProps.topic, defaultProps.properties + specificProps.properties)
+        val consumerProperties =
+            KafkaConfigurationProperties.ConsumerProperties(specificProps.topic, specificProps.dltEnabled, defaultProps.properties + specificProps.properties)
 
         log.debug("Computed consumer properties for {} : {}", kafkaConsumerName, consumerProperties)
 
@@ -31,4 +32,6 @@ class KafkaReceiverOptionsFactory(val config: KafkaConfigurationProperties) {
 
         return options
     }
+
+    fun isDeadLetterTopicEnabled(kafkaConsumerName: KafkaConsumerName) = (config.consumers[kafkaConsumerName]?.dltEnabled) ?: false
 }

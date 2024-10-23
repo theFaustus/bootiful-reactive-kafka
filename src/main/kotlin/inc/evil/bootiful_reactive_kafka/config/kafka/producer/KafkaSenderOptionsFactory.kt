@@ -13,6 +13,13 @@ class KafkaSenderOptionsFactory(val config: KafkaConfigurationProperties) {
         val log: Logger = LoggerFactory.getLogger(this::class.java)
     }
 
+    fun <K, V> createDltSenderOptions(): SenderOptions<K, V> {
+        val defaultProps = config.producers[KafkaProducerName.DEFAULT]
+            ?: throw IllegalStateException("Default producer configuration not found")
+        log.debug("Computed DLT Producer properties for {}", defaultProps)
+        return SenderOptions.create(defaultProps.properties)
+    }
+
     fun <K, V> createSenderOptions(kafkaProducerName: KafkaProducerName): SenderOptions<K, V> {
         log.debug("Creating receiver options for Producer=[{}]", kafkaProducerName)
         val defaultProps = config.producers[KafkaProducerName.DEFAULT]
